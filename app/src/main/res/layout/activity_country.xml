@@ -11,7 +11,7 @@
         android:layout_height="200dp"
         android:background="@drawable/circle"
         android:layout_centerInParent="true"
-        android:text="Your birthday"
+        android:text="Your Country"
         android:textColor="@color/white"
         android:textSize="40sp"
         android:gravity="center"/>
