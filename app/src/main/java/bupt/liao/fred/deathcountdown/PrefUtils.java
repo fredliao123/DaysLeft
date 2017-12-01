@@ -14,7 +14,6 @@ public class PrefUtils {
 
     private static final String TAG = "pref";
 
-    private static final String DEFAULT_STRING = "";
 
     private PrefUtils(){
 
@@ -28,7 +27,6 @@ public class PrefUtils {
     }
 
     public SharedPreferences getSharedPreference(){
-        Context context = App.getContext();
         return App.getContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
     }
 
@@ -42,9 +40,20 @@ public class PrefUtils {
         editor.commit();
     }
 
+    public void putFloat(String key, float value){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putFloat(key, value);
+        editor.commit();
+    }
+
     public String getString(String key){
         SharedPreferences preferences = getSharedPreference();
-        return preferences.getString(key, DEFAULT_STRING);
+        return preferences.getString(key, StringUtil.DEFAULT_STRING);
+    }
+
+    public float getFloat(String key){
+        SharedPreferences preferences = getSharedPreference();
+        return preferences.getFloat(key, 0f);
     }
 
 }

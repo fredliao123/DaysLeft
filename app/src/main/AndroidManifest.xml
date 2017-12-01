@@ -18,7 +18,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.CountryActivity"/>
+        <activity android:name=".ui.SelectActivity"/>
+
+        <activity android:name=".ui.ShowLeftTimeActivity"/>
     </application>
 
 </manifest>

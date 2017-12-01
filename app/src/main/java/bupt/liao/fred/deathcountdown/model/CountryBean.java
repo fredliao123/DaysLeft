@@ -11,9 +11,9 @@ import com.bigkoo.pickerview.model.IPickerViewData;
 public class CountryBean implements IPickerViewData {
     private int id;
     private String country;
-    private double age;
+    private float age;
 
-    public CountryBean(int id, String country, double age){
+    public CountryBean(int id, String country, float age){
         this.id = id;
         this.country = country;
         this.age = age;
@@ -35,11 +35,11 @@ public class CountryBean implements IPickerViewData {
         this.country = country;
     }
 
-    public double getAge() {
+    public float getAge() {
         return age;
     }
 
-    public void setAge(double age) {
+    public void setAge(float age) {
         this.age = age;
     }
 

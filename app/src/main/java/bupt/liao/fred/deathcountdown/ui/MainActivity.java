@@ -1,19 +1,16 @@
 package bupt.liao.fred.deathcountdown.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.os.Handler;
 import android.widget.TextView;
-
-import com.bigkoo.pickerview.TimePickerView;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import bupt.liao.fred.deathcountdown.PrefUtils;
 import bupt.liao.fred.deathcountdown.R;
+import bupt.liao.fred.deathcountdown.StringUtil;
+import bupt.liao.fred.flipviewlibrary.FlipView;
 import cn.droidlover.xdroid.base.XActivity;
 
 public class MainActivity extends XActivity {
@@ -23,27 +20,31 @@ public class MainActivity extends XActivity {
 
     TextView text;
 
+    FlipView flipView;
+
     @Override
     public void initData(Bundle savedInstanceState) {
-        text = (TextView)this.findViewById(R.id.text);
-        text.setOnClickListener(new View.OnClickListener() {
+        flipView = (FlipView)findViewById(R.id.flipview);
+        //当计时结束时，跳转至主界面
+        runOnUiThread(new Runnable() {
             @Override
-            public void onClick(View view) {
-                TimePickerView pvTime = new TimePickerView.Builder(context, new TimePickerView.OnTimeSelectListener() {
+            public void run() {
+                flipView.getAnimatorSet().addListener(new AnimatorListenerAdapter() {
                     @Override
-                    public void onTimeSelect(Date date, View v) {//选中事件回调
-                        Log.d(TAG, getTime(date));
-                        PrefUtils.getInstance().putString("birth", getTime(date));
-                        Intent intent = new Intent(context, CountryActivity.class);
-                        context.startActivity(intent);
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        if(PrefUtils.getInstance().getString(StringUtil.BIRTH).equals(StringUtil.DEFAULT_STRING)||
+                                PrefUtils.getInstance().getFloat(StringUtil.AGE) == 0f ||
+                                PrefUtils.getInstance().getString(StringUtil.DEATH).equals(StringUtil.DEFAULT_STRING)) {
+                            startActivity(new Intent(MainActivity.this, SelectActivity.class));
+                        }else{
+                            startActivity(new Intent(MainActivity.this, ShowLeftTimeActivity.class));
+                        }
+                            MainActivity.this.finish();
 
                     }
-                })
-                        .isDialog(true)
-                        .setType(new boolean[]{true, true, true, false, false, false})
-                        .build();
-                pvTime.setDate(Calendar.getInstance());//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
-                pvTime.show();
+                });
+                flipView.startFlip();
             }
         });
     }
@@ -53,9 +54,6 @@ public class MainActivity extends XActivity {
         return R.layout.activity_main;
     }
 
-    private String getTime(Date date) {//可根据需要自行截取数据显示
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(date);
-    }
+
 }
 
